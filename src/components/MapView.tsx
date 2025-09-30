@@ -2,7 +2,6 @@ import React from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { DivIcon } from 'leaflet';
 import { Site } from '../types';
-import { getRiskColor } from '../data/mockData';
 import 'leaflet/dist/leaflet.css';
 
 interface MapViewProps {
@@ -17,28 +16,57 @@ const MapView: React.FC<MapViewProps> = ({ sites, selectedSite, onSiteSelect }) 
 
   // Create custom marker icons for different risk levels
   const createMarkerIcon = (site: Site) => {
-    const color = getRiskColor(site.riskLevel);
-    const size = selectedSite?.id === site.id ? 32 : 28;
+    const size = selectedSite?.id === site.id ? 35 : 30;
     const pulseClass = site.riskLevel === 'critical' ? 'animate-pulse' : '';
+    
+    // Enhanced gradient colors for more vibrant appearance
+    const getGradientColors = (level: Site['riskLevel']) => {
+      switch (level) {
+        case 'safe': return { primary: '#10b981', secondary: '#34d399', glow: '#6ee7b7' };
+        case 'moderate': return { primary: '#f59e0b', secondary: '#fbbf24', glow: '#fde047' };
+        case 'high': return { primary: '#f97316', secondary: '#fb923c', glow: '#fdba74' };
+        case 'critical': return { primary: '#ef4444', secondary: '#f87171', glow: '#fca5a5' };
+        default: return { primary: '#64748b', secondary: '#94a3b8', glow: '#cbd5e1' };
+      }
+    };
+    
+    const colors = getGradientColors(site.riskLevel);
     
     return new DivIcon({
       html: `
         <div class="relative">
-          <svg width="${size}" height="${size + 8}" viewBox="0 0 24 32" class="${pulseClass}">
+          <svg width="${size}" height="${size + 10}" viewBox="0 0 24 34" class="${pulseClass}">
+            <defs>
+              <radialGradient id="gradient-${site.id}" cx="50%" cy="30%" r="70%">
+                <stop offset="0%" style="stop-color:${colors.secondary};stop-opacity:1" />
+                <stop offset="100%" style="stop-color:${colors.primary};stop-opacity:1" />
+              </radialGradient>
+              <filter id="glow-${site.id}">
+                <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                <feMerge> 
+                  <feMergeNode in="coloredBlur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+            <circle cx="12" cy="16" r="8" fill="${colors.glow}" opacity="0.3"/>
             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" 
-                  fill="${color}" 
+                  fill="url(#gradient-${site.id})" 
                   stroke="white" 
-                  stroke-width="2"/>
-            <circle cx="12" cy="9" r="3" fill="white"/>
+                  stroke-width="2.5"
+                  filter="url(#glow-${site.id})"/>
+            <circle cx="12" cy="9" r="3.5" fill="white" opacity="0.9"/>
+            <circle cx="12" cy="9" r="2" fill="${colors.primary}"/>
           </svg>
           ${site.alerts.length > 0 ? `
-            <div class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border border-white animate-ping"></div>
+            <div class="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-red-400 to-red-600 rounded-full border-2 border-white animate-ping shadow-lg"></div>
+            <div class="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-red-500 to-red-700 rounded-full border-2 border-white"></div>
           ` : ''}
         </div>
       `,
       className: 'custom-marker',
-      iconSize: [size, size + 8],
-      iconAnchor: [size / 2, size + 8],
+      iconSize: [size, size + 10],
+      iconAnchor: [size / 2, size + 10],
     });
   };
 
@@ -72,9 +100,17 @@ const MapView: React.FC<MapViewProps> = ({ sites, selectedSite, onSiteSelect }) 
         className="h-full w-full"
         style={{ backgroundColor: '#1f2937' }}
       >
+        {/* Colorful Satellite/Terrain Layer */}
         <TileLayer
-          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+          url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+          attribution='Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+        />
+        
+        {/* Colorful Street Overlay for better readability */}
+        <TileLayer
+          url="https://stamen-tiles-{s}.a.ssl.fastly.net/toner-hybrid/{z}/{x}/{y}{r}.png"
+          attribution='Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          opacity={0.6}
         />
         
         {sites.map((site) => (

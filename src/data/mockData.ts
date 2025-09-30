@@ -110,7 +110,7 @@ export const mockSites: Site[] = [
 
 export const mockRiskFactors: Record<string, RiskFactor[]> = {
   'nh-5-tunnel': [
-    { name: 'Rainfall', value: 45.3, impact: 35, description: 'Heavy rainfall increases rockfall risk' },
+    { name: 'Rainfall', value: 45.3, impact: 35, description: 'Heavy rainfall increases mining risk' },
     { name: 'Slope Angle', value: 42.0, impact: 25, description: 'Steep slope contributes to instability' },
     { name: 'Soil Moisture', value: 78.5, impact: 20, description: 'High moisture weakens soil structure' },
     { name: 'Vibration', value: 8.2, impact: 15, description: 'Traffic vibrations affect stability' },

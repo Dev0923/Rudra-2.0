@@ -18,8 +18,8 @@ const LandingPage: React.FC = () => {
                   transition={{ duration: 0.8 }}
                   className="text-4xl tracking-tight font-extrabold text-gray-100 sm:text-5xl md:text-6xl"
                 >
-                  <span className="block xl:inline">Rockfall Risk</span>{' '}
-                  <span className="block text-blue-400 xl:inline">Monitoring Platform</span>
+                  <span className="block xl:inline">Minerisk</span>{' '}
+                  <span className="block text-blue-400 xl:inline">Mining Risk Platform</span>
                 </motion.h1>
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
@@ -27,8 +27,8 @@ const LandingPage: React.FC = () => {
                   transition={{ duration: 0.8, delay: 0.2 }}
                   className="mt-3 text-base text-gray-300 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0"
                 >
-                  Real-time AI-powered site risk prediction with actionable insights. 
-                  Monitor geological hazards, predict rockfall events, and protect infrastructure with cutting-edge technology.
+                  Real-time AI-powered mining risk prediction with actionable insights. 
+                  Monitor geological hazards, predict mining events, and protect infrastructure with cutting-edge technology.
                 </motion.p>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -137,7 +137,7 @@ const LandingPage: React.FC = () => {
                 {
                   icon: TrendingUp,
                   title: 'Predictive Analytics',
-                  description: 'Machine learning models predict rockfall events before they occur, enabling proactive measures.',
+                  description: 'Machine learning models predict mining risk events before they occur, enabling proactive measures.',
                 },
                 {
                   icon: Mountain,

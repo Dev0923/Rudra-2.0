@@ -28,7 +28,7 @@ const Navbar: React.FC = () => {
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-2">
               <Mountain className="h-8 w-8 text-blue-400" />
-              <span className="text-xl font-bold text-white">RockWatch</span>
+              <span className="text-xl font-bold text-white">Minerisk</span>
             </Link>
           </div>
 
