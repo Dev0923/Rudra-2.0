@@ -82,3 +82,18 @@
 .leaflet-control-zoom a:hover {
   @apply bg-gray-700;
 }
+
+/* Custom pin marker styles */
+.custom-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+.custom-marker svg {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  transition: all 0.2s ease-in-out;
+}
+
+.custom-marker:hover svg {
+  transform: scale(1.1);
+}

@@ -18,23 +18,27 @@ const MapView: React.FC<MapViewProps> = ({ sites, selectedSite, onSiteSelect }) 
   // Create custom marker icons for different risk levels
   const createMarkerIcon = (site: Site) => {
     const color = getRiskColor(site.riskLevel);
-    const size = selectedSite?.id === site.id ? 20 : 16;
+    const size = selectedSite?.id === site.id ? 32 : 28;
     const pulseClass = site.riskLevel === 'critical' ? 'animate-pulse' : '';
     
     return new DivIcon({
       html: `
         <div class="relative">
-          <div class="w-${size} h-${size} rounded-full border-2 border-white shadow-lg ${pulseClass}" 
-               style="background-color: ${color}">
-          </div>
+          <svg width="${size}" height="${size + 8}" viewBox="0 0 24 32" class="${pulseClass}">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" 
+                  fill="${color}" 
+                  stroke="white" 
+                  stroke-width="2"/>
+            <circle cx="12" cy="9" r="3" fill="white"/>
+          </svg>
           ${site.alerts.length > 0 ? `
             <div class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border border-white animate-ping"></div>
           ` : ''}
         </div>
       `,
       className: 'custom-marker',
-      iconSize: [size + 4, size + 4],
-      iconAnchor: [(size + 4) / 2, (size + 4) / 2],
+      iconSize: [size, size + 8],
+      iconAnchor: [size / 2, size + 8],
     });
   };
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Mountain, Menu, Bell, User, Settings } from 'lucide-react';
+import { Mountain, Menu, Bell, Settings } from 'lucide-react';
 
 const Navbar: React.FC = () => {
   const location = useLocation();
@@ -63,14 +63,6 @@ const Navbar: React.FC = () => {
             <button className="p-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md transition-colors duration-200">
               <Settings className="h-5 w-5" />
             </button>
-
-            {/* User Profile */}
-            <div className="relative">
-              <button className="flex items-center space-x-2 p-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md transition-colors duration-200">
-                <User className="h-5 w-5" />
-                <span className="hidden sm:block text-sm">Admin</span>
-              </button>
-            </div>
 
             {/* Mobile menu button */}
             <button className="md:hidden p-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md">
