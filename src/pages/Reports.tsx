@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Download, FileText, Calendar, Filter } from 'lucide-react';
+import { Download, FileText, Calendar } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import { mockSites } from '../data/mockData';
 

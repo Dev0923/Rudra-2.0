@@ -32,7 +32,7 @@ const RiskGauge: React.FC<RiskGaugeProps> = ({ value, size = 120, showLabels = t
   const centerY = size / 2;
   
   // Create SVG arc path for the gauge background
-  const createArcPath = (startAngle: number, endAngle: number, innerRadius: number, outerRadius: number) => {
+  const createArcPath = (startAngle: number, endAngle: number, outerRadius: number) => {
     const start = polarToCartesian(centerX, centerY, outerRadius, endAngle);
     const end = polarToCartesian(centerX, centerY, outerRadius, startAngle);
     const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
@@ -63,7 +63,7 @@ const RiskGauge: React.FC<RiskGaugeProps> = ({ value, size = 120, showLabels = t
         <svg width={size} height={size * 0.7} className="overflow-visible">
           {/* Background arc */}
           <path
-            d={createArcPath(0, 180, radius - 8, radius)}
+            d={createArcPath(0, 180, radius)}
             fill="none"
             stroke="#374151"
             strokeWidth="8"
@@ -72,7 +72,7 @@ const RiskGauge: React.FC<RiskGaugeProps> = ({ value, size = 120, showLabels = t
           
           {/* Progress arc */}
           <path
-            d={createArcPath(0, angle, radius - 8, radius)}
+            d={createArcPath(0, angle, radius)}
             fill="none"
             stroke={color}
             strokeWidth="8"
@@ -88,7 +88,7 @@ const RiskGauge: React.FC<RiskGaugeProps> = ({ value, size = 120, showLabels = t
           ].map((segment, index) => (
             <path
               key={index}
-              d={createArcPath(segment.start, segment.end, radius - 12, radius - 4)}
+              d={createArcPath(segment.start, segment.end, radius - 4)}
               fill="none"
               stroke={`${segment.color}20`}
               strokeWidth="4"

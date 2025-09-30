@@ -1,6 +1,6 @@
 import React from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import { Icon, DivIcon } from 'leaflet';
+import { DivIcon } from 'leaflet';
 import { Site } from '../types';
 import { getRiskColor } from '../data/mockData';
 import 'leaflet/dist/leaflet.css';
