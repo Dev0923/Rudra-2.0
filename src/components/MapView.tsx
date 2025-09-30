@@ -86,57 +86,154 @@ const MapView: React.FC<MapViewProps> = ({ sites, selectedSite, onSiteSelect }) 
               click: () => onSiteSelect(site),
             }}
           >
-            <Popup className="custom-popup">
-              <div className="p-2 min-w-[250px]">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="font-semibold text-white text-sm">{site.name}</h3>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getRiskBadgeClass(site.riskLevel)}`}>
-                    {site.riskPercentage}%
+            <Popup className="custom-popup" maxWidth={400}>
+              <div className="p-4 min-w-[350px]">
+                {/* Header */}
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-semibold text-white text-lg">{site.name}</h3>
+                  <span className={`px-3 py-1 rounded-full text-sm font-medium border ${getRiskBadgeClass(site.riskLevel)}`}>
+                    {site.riskLevel.toUpperCase()} - {site.riskPercentage}%
                   </span>
                 </div>
                 
-                <div className="space-y-1 text-xs text-gray-300">
-                  <div className="flex justify-between">
-                    <span>Type:</span>
-                    <span className="capitalize">{site.type.replace('-', ' ')}</span>
+                {/* Basic Info */}
+                <div className="grid grid-cols-2 gap-3 mb-4 text-sm">
+                  <div className="space-y-1">
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Type:</span>
+                      <span className="text-white capitalize">{site.type.replace('-', ' ')}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Risk Level:</span>
+                      <span className={`capitalize font-medium ${
+                        site.riskLevel === 'safe' ? 'text-green-400' :
+                        site.riskLevel === 'moderate' ? 'text-yellow-400' :
+                        site.riskLevel === 'high' ? 'text-orange-400' :
+                        'text-red-400'
+                      }`}>
+                        {site.riskLevel}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex justify-between">
-                    <span>Risk Level:</span>
-                    <span className={`capitalize font-medium ${
-                      site.riskLevel === 'safe' ? 'text-green-400' :
-                      site.riskLevel === 'moderate' ? 'text-yellow-400' :
-                      site.riskLevel === 'high' ? 'text-orange-400' :
-                      'text-red-400'
-                    }`}>
-                      {site.riskLevel}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Last Updated:</span>
-                    <span>{formatLastUpdated(site.lastUpdated)}</span>
+                  <div className="space-y-1">
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Last Updated:</span>
+                      <span className="text-white">{formatLastUpdated(site.lastUpdated)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Coordinates:</span>
+                      <span className="text-white text-xs">{site.coordinates[0].toFixed(4)}, {site.coordinates[1].toFixed(4)}</span>
+                    </div>
                   </div>
                 </div>
 
-                {site.alerts.length > 0 && (
-                  <div className="mt-2 p-2 bg-red-500/10 border border-red-500/20 rounded">
-                    <div className="flex items-center space-x-1 mb-1">
-                      <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                      <span className="text-xs font-medium text-red-400">
-                        {site.alerts.length} Active Alert{site.alerts.length !== 1 ? 's' : ''}
-                      </span>
+                {/* Sensor Data */}
+                <div className="mb-4">
+                  <h4 className="text-sm font-medium text-gray-200 mb-2 flex items-center">
+                    <span className="mr-2">📊</span> Live Sensor Data
+                  </h4>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="bg-gray-700/50 rounded-lg p-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-gray-400">🌧️ Rainfall</span>
+                        <span className="text-sm font-semibold text-white">{site.sensors.rainfall.toFixed(1)} mm</span>
+                      </div>
                     </div>
-                    <p className="text-xs text-gray-300">
-                      {site.alerts[0].message}
-                    </p>
+                    <div className="bg-gray-700/50 rounded-lg p-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-gray-400">📳 Vibration</span>
+                        <span className="text-sm font-semibold text-white">{site.sensors.vibration.toFixed(1)} Hz</span>
+                      </div>
+                    </div>
+                    <div className="bg-gray-700/50 rounded-lg p-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-gray-400">💧 Soil Moisture</span>
+                        <span className="text-sm font-semibold text-white">{site.sensors.soilMoisture.toFixed(1)}%</span>
+                      </div>
+                    </div>
+                    <div className="bg-gray-700/50 rounded-lg p-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs text-gray-400">🌡️ Temperature</span>
+                        <span className="text-sm font-semibold text-white">{site.sensors.temperature.toFixed(1)}°C</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-2 bg-gray-700/50 rounded-lg p-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs text-gray-400">📐 Slope Angle</span>
+                      <span className="text-sm font-semibold text-white">{site.sensors.slopeAngle.toFixed(1)}°</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Alerts */}
+                {site.alerts.length > 0 && (
+                  <div className="mb-4">
+                    <h4 className="text-sm font-medium text-gray-200 mb-2 flex items-center">
+                      <span className="mr-2">⚠️</span> Active Alerts ({site.alerts.length})
+                    </h4>
+                    <div className="space-y-2 max-h-24 overflow-y-auto">
+                      {site.alerts.map((alert) => (
+                        <div key={alert.id} className={`p-2 rounded border ${
+                          alert.level === 'critical' ? 'bg-red-500/10 border-red-500/20' :
+                          alert.level === 'warning' ? 'bg-yellow-500/10 border-yellow-500/20' :
+                          'bg-blue-500/10 border-blue-500/20'
+                        }`}>
+                          <div className="flex items-center justify-between mb-1">
+                            <span className={`text-xs font-medium uppercase ${
+                              alert.level === 'critical' ? 'text-red-400' :
+                              alert.level === 'warning' ? 'text-yellow-400' : 'text-blue-400'
+                            }`}>
+                              {alert.level}
+                            </span>
+                            <span className="text-xs text-gray-400">{formatLastUpdated(alert.timestamp)}</span>
+                          </div>
+                          <p className="text-xs text-gray-300">{alert.message}</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
 
-                <button
-                  onClick={() => onSiteSelect(site)}
-                  className="mt-3 w-full px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded transition-colors duration-200"
-                >
-                  View Details
-                </button>
+                {/* AI Recommendations */}
+                <div className="mb-4">
+                  <h4 className="text-sm font-medium text-gray-200 mb-2 flex items-center">
+                    <span className="mr-2">🤖</span> AI Recommendations
+                  </h4>
+                  <div className={`p-2 rounded border ${
+                    site.riskLevel === 'critical' ? 'bg-red-500/10 border-red-500/20' :
+                    site.riskLevel === 'high' ? 'bg-orange-500/10 border-orange-500/20' :
+                    site.riskLevel === 'moderate' ? 'bg-yellow-500/10 border-yellow-500/20' :
+                    'bg-green-500/10 border-green-500/20'
+                  }`}>
+                    <p className="text-xs text-gray-300">
+                      {site.riskLevel === 'critical' ? 
+                        '🚨 IMMEDIATE ACTION: Critical risk detected. Implement emergency protocols and restrict access immediately.' :
+                        site.riskLevel === 'high' ? 
+                        '⚠️ HIGH ALERT: Enhanced monitoring recommended. Consider preventive measures.' :
+                        site.riskLevel === 'moderate' ? 
+                        '⚡ MONITOR: Conditions warrant attention. Increase surveillance frequency.' :
+                        '✅ STABLE: Current conditions are within safe parameters. Continue routine monitoring.'
+                      }
+                    </p>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex space-x-2">
+                  <button
+                    onClick={() => onSiteSelect(site)}
+                    className="flex-1 px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded transition-colors duration-200"
+                  >
+                    📊 Full Analysis
+                  </button>
+                  <button
+                    onClick={() => window.open(`/site/${site.id}`, '_blank')}
+                    className="px-3 py-2 bg-gray-700 hover:bg-gray-600 text-gray-200 text-sm font-medium rounded transition-colors duration-200"
+                  >
+                    🔗 Open
+                  </button>
+                </div>
               </div>
             </Popup>
           </Marker>

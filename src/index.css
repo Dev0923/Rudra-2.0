@@ -65,6 +65,12 @@
 
 .leaflet-popup-content-wrapper {
   @apply bg-gray-800 text-gray-100 border border-gray-700 rounded-xl;
+  max-width: 450px !important;
+}
+
+.leaflet-popup-content {
+  margin: 0 !important;
+  line-height: 1.4 !important;
 }
 
 .leaflet-popup-tip {
